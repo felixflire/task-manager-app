@@ -1,0 +1,7 @@
+{% extends 'users/layout.html' %}
+{% block content %}
+    <h1>Hello welcome {{request.user.username}}</h1>
+
+    <p><a href="{% url 'users:login' %}"></a></p>
+    
+{% endblock %}

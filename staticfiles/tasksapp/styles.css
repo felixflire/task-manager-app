@@ -1,0 +1,166 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background: #f5f5f5;
+    color: #333;
+}
+
+h1 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+th {
+    background: #333;
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+td input[type="submit" ] {
+    padding: 5px 12px;
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+td input[type="submit"]:hover {
+    background: #e74c3c;
+}
+
+td form {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: #fafafa;
+}
+
+/* Add task form */
+form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+input[type="text"] {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+input[type="submit"] {
+    padding: 8px 16px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+input[type="submit"]:hover {
+    background: #555;
+}
+
+a {
+    color: #333;
+    font-size: 0.9rem;
+}
+
+ 
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    body {
+        margin: 20px auto;
+        padding: 0 12px;
+    }
+ 
+    h1 {
+        font-size: 1.2rem;
+    }
+ 
+    /* Stack table rows as blocks on small screens */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+ 
+    thead {
+        display: none; /* hide headers on mobile */
+    }
+ 
+    tr {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+ 
+    td {
+        border: none;
+        padding: 6px 4px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+ 
+    /* Label each cell using data attributes */
+    td:nth-child(1)::before { content: "Task: ";        font-weight: bold; }
+    td:nth-child(2)::before { content: "Description: "; font-weight: bold; }
+    td:nth-child(3)::before { content: "Status: ";      font-weight: bold; }
+    td:nth-child(4)::before { content: "Action: ";      font-weight: bold; }
+ 
+    /* Add form stacks vertically */
+    form {
+        flex-direction: column;
+    }
+ 
+    input[type="text"] {
+        width: 100%;
+    }
+ 
+    input[type="submit"] {
+        width: 100%;
+    }
+}
+ 
