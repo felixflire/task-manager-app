@@ -1,0 +1,36 @@
+{% extends 'tasksapp/layout.html' %}
+
+{% block body %}
+
+    <h1>Your Daily Summary</h1>
+
+    <div class="summary-box">{{ summary }}</div>
+<a href="{% url 'tasksapp:index' %}" class="back-link">← Back to Tasks</a>
+
+<style>
+    
+.summary-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 2rem;
+    white-space: pre-line;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    line-height: 2;
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.back-link:hover { color: #000; }
+
+
+</style>
+
+    {% endblock %}
+

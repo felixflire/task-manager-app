@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from .ml_summary import generate_summary
 
 from .models import Task
 
@@ -46,3 +47,16 @@ def toggle_complete(request, task_id):
         task.save()
         print(task.completed)
     return redirect("tasksapp:index")
+
+
+# tasksapp/views.py
+
+
+@login_required(login_url='users:login')
+def summary(request):
+    todays_tasks = Task.objects.filter(user=request.user)  # today's tasks
+    all_tasks    = Task.objects.filter(user=request.user)  # all historical tasks
+    summary_text = generate_summary(todays_tasks, all_tasks)
+    return render(request, "tasksapp/summary.html", {
+        "summary": summary_text
+    })

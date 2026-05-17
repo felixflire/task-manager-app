@@ -1,18 +1,8 @@
-{% load static %}
+{% extends  'tasksapp/layout.html'%}
 
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tasks App</title>
-    <link rel="stylesheet" href="{% static 'tasksapp/styles.css' %}" />
-</head>
-
-<body>
-    <h1>{{ request.user.username }}'s Tasks</h1>
+   
     {% block body %}
+    
 
     <table>
         <tr>
@@ -25,9 +15,9 @@
             <td>{{ task.tasksfield }}</td>
             <td>{{ task.description }}</td>
             <td> {{ task.completed}}</td>
-            </td>
             
-            <td  >{% if tak.completed == 'completed'%}
+            
+            <td  >{% if task.completed == 'completed'%}
                 <span class="completed-text">Task Complete</span>
                 {% else %}
                 <form action="{% url 'tasksapp:toggle_complete' task.id%} " method="post">
@@ -56,8 +46,9 @@
         <input type="submit" />
     </form>
 
+    <a href="{% url 'tasksapp:summary' %}">📊 View Daily Summary</a>
+
     <a href="{% url 'users:logout'%}">logout</a>
     {% endblock%}
-</body>
 
-</html>
+

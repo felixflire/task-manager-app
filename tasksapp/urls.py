@@ -7,5 +7,6 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("add/", views.add, name = "add"),
     path("delete/", views.delete, name = "delete"),
-    path("toggle/<int:task_id>/", views.toggle_complete, name="toggle_complete")
+    path("toggle/<int:task_id>/", views.toggle_complete, name="toggle_complete"),
+    path("summary/", views.summary, name='summary'),
 ]
