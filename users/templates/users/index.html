@@ -2,6 +2,11 @@
 {% block content %}
     <h1>Hello welcome {{request.user.username}}</h1>
 
-    <p><a href="{% url 'users:login' %}"></a></p>
+    <p><a href=""></a></p>
+
+    <form action="{% url 'users:login' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Logout"/>  
+    </form>
     
 {% endblock %}

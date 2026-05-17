@@ -43,4 +43,5 @@ def register(request):
     
     return render(request, "users/register.html")
 def logout(request):
+    auth_logout(request)
     return redirect("users:login")

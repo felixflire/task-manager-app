@@ -3,467 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow — Your Personal Task Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>TaskFlow</title>
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --border: #222;
-            --accent: #c8f55a;
-            --accent-dim: #9bbf3e;
-            --text: #f0ede6;
-            --muted: #555;
-            --font-head: 'Playfair Display', serif;
-            --font-body: 'DM Sans', sans-serif;
-        }
-
-        html { scroll-behavior: smooth; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: var(--font-body);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: Georgia, serif;
+            background: #fafafa;
+            color: #222;
+            line-height: 1.7;
         }
 
-        /* ── Noise overlay ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── Nav ── */
+        /* Nav */
         nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 4rem;
-            border-bottom: 1px solid var(--border);
-            background: rgba(10,10,10,0.85);
-            backdrop-filter: blur(12px);
         }
 
         .logo {
-            font-family: var(--font-head);
-            font-size: 1.4rem;
-            color: var(--text);
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #222;
             text-decoration: none;
-            letter-spacing: -0.02em;
         }
 
-        .logo span { color: var(--accent); }
-
-        .nav-links { display: flex; gap: 1rem; align-items: center; }
+        .nav-links { display: flex; gap: 1rem; }
 
         .nav-links a {
             text-decoration: none;
+            color: #555;
             font-size: 0.9rem;
-            font-weight: 400;
-            color: var(--muted);
-            transition: color 0.2s;
-            padding: 0.5rem 1rem;
+            font-family: Arial, sans-serif;
         }
 
-        .nav-links a:hover { color: var(--text); }
-
-        .btn-nav {
-            background: var(--accent) !important;
-            color: #0a0a0a !important;
-            border-radius: 6px;
-            font-weight: 500 !important;
-            transition: background 0.2s, transform 0.15s !important;
+        .nav-links a.btn {
+            background: #222;
+            color: #fff;
+            padding: 0.45rem 1.1rem;
+            border-radius: 5px;
         }
 
-        .btn-nav:hover {
-            background: var(--accent-dim) !important;
-            transform: translateY(-1px);
-        }
-
-        /* ── Hero ── */
+        /* Hero */
         .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 10rem 4rem 6rem;
-            overflow: hidden;
-        }
-
-        /* Glow blobs */
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
-        .blob-1 {
-            width: 500px; height: 500px;
-            background: var(--accent);
-            top: -100px; right: -100px;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .blob-2 {
-            width: 300px; height: 300px;
-            background: #5af5c8;
-            bottom: 100px; left: 200px;
-            animation: float 10s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.05); }
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(200,245,90,0.1);
-            border: 1px solid rgba(200,245,90,0.25);
-            border-radius: 100px;
-            padding: 0.4rem 1rem;
-            font-size: 0.8rem;
-            color: var(--accent);
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeUp 0.6s 0.2s forwards;
-        }
-
-        .hero-tag::before {
-            content: '';
-            width: 6px; height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .hero h1 {
-            font-family: var(--font-head);
-            font-size: clamp(3rem, 7vw, 6rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            max-width: 700px;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.7s 0.4s forwards;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--muted);
-            max-width: 480px;
-            line-height: 1.7;
-            margin-bottom: 2.5rem;
-            font-weight: 300;
-            opacity: 0;
-            animation: fadeUp 0.7s 0.6s forwards;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeUp 0.7s 0.8s forwards;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            background: var(--accent);
-            color: #0a0a0a;
-            text-decoration: none;
-            padding: 0.85rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 0 0 0 rgba(200,245,90,0);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-dim);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(200,245,90,0.2);
-        }
-
-        .btn-secondary {
-            display: inline-block;
-            background: transparent;
-            color: var(--text);
-            text-decoration: none;
-            padding: 0.85rem 2rem;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s, transform 0.15s;
-        }
-
-        .btn-secondary:hover {
-            border-color: #444;
-            transform: translateY(-2px);
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── Stats strip ── */
-        .stats {
-            display: flex;
-            gap: 3rem;
-            padding: 2rem 4rem;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            background: var(--surface);
-            flex-wrap: wrap;
-        }
-
-        .stat { display: flex; flex-direction: column; gap: 0.2rem; }
-
-        .stat-number {
-            font-family: var(--font-head);
-            font-size: 2rem;
-            color: var(--accent);
-            line-height: 1;
-        }
-
-        .stat-label { font-size: 0.8rem; color: var(--muted); }
-
-        /* ── Features ── */
-        .features {
-            padding: 6rem 4rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            max-width: 1100px;
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            max-width: 680px;
             margin: 0 auto;
         }
 
-        .feature-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: border-color 0.2s, transform 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-            transform-origin: left;
-        }
-
-        .feature-card:hover {
-            border-color: #333;
-            transform: translateY(-4px);
-        }
-
-        .feature-card:hover::before { transform: scaleX(1); }
-
-        .feature-icon {
-            font-size: 1.8rem;
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
-        .feature-card h3 {
-            font-family: var(--font-head);
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            font-weight: 400;
+        .hero p {
+            color: #555;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            font-family: Arial, sans-serif;
         }
 
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--muted);
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .hero-btns a {
+            text-decoration: none;
+            padding: 0.75rem 1.8rem;
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .btn-dark { background: #222; color: #fff; }
+        .btn-outline { border: 1px solid #ccc; color: #333; }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            color: #bbb;
+            font-family: Arial, sans-serif;
+            font-size: 0.85rem;
+            margin: 2rem 0;
+        }
+
+        /* Features */
+        .features {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .card-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.88rem;
+            color: #666;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
         }
 
-        /* ── CTA Section ── */
-        .cta-section {
-            margin: 2rem 4rem 6rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 5rem 4rem;
+        /* Tips section */
+        .tips {
+            background: #fff;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+        }
+
+        .tips-inner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .tips h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
 
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(200,245,90,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .cta-section h2 {
-            font-family: var(--font-head);
-            font-size: clamp(2rem, 4vw, 3.5rem);
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        .cta-section p {
-            color: var(--muted);
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            font-weight: 300;
-        }
-
-        /* ── Footer ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem 4rem;
+        .tip {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
             gap: 1rem;
+            margin-bottom: 1.2rem;
+            align-items: flex-start;
         }
 
-        footer p { font-size: 0.85rem; color: var(--muted); }
+        .tip-num {
+            background: #222;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-family: Arial, sans-serif;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
 
-        footer a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }
-        footer a:hover { color: var(--text); }
+        .tip p {
+            font-size: 0.95rem;
+            color: #444;
+            font-family: Arial, sans-serif;
+        }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            nav { padding: 1rem 1.5rem; }
-            .nav-links a:not(.btn-nav) { display: none; }
-            .hero { padding: 8rem 1.5rem 4rem; }
-            .stats { padding: 1.5rem; gap: 1.5rem; }
-            .features { padding: 3rem 1.5rem; }
-            .cta-section { margin: 1rem 1.5rem 4rem; padding: 3rem 1.5rem; }
-            footer { padding: 1.5rem; flex-direction: column; text-align: center; }
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .cta h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 0.75rem;
+        }
+
+        .cta p {
+            color: #666;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta a {
+            text-decoration: none;
+            background: #222;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #eee;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 0.82rem;
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            nav { padding: 1rem; }
+            .nav-links a:not(.btn) { display: none; }
+            .hero { padding: 3rem 1.5rem 2rem; }
+            .features { padding: 1.5rem; }
+            .tips { padding: 2rem 1.5rem; }
+            .hero-btns { flex-direction: column; align-items: center; }
+            .hero-btns a { width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Nav -->
-    <nav>
-        <a href="/" class="logo">Task<span>Flow</span></a>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="/users/login">Login</a>
-            <a href="/users/register" class="btn-nav">Get Started</a>
+<nav>
+    <a href="/" class="logo">TaskFlow</a>
+    <div class="nav-links">
+        <a href="/users/">Login</a>
+        <a href="/users/register" class="btn">Get Started</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Plan your day.<br>Get things done.</h1>
+    <p>TaskFlow is a simple personal task manager. Add your tasks, track progress, and stay on top of your day — all in one place.</p>
+    <div class="hero-btns">
+        <a href="/users/register" class="btn-dark">Create Free Account</a>
+        <a href="/users/" class="btn-outline">Sign In</a>
+    </div>
+</section>
+
+<div class="divider">— Why TaskFlow —</div>
+
+<section class="features">
+    <div class="card">
+        <div class="card-icon">📋</div>
+        <h3>Your Own Task List</h3>
+        <p>Every account has its own private space. Only you can see and manage your tasks.</p>
+    </div>
+    <div class="card">
+        <div class="card-icon">✅</div>
+        <h3>Mark as Complete</h3>
+        <p>Click once to mark a task done. It stays saved even after you close the browser.</p>
+    </div>
+    <div class="card">
+        <div class="card-icon">🗑️</div>
+        <h3>Delete with Ease</h3>
+        <p>Remove tasks you no longer need in one click. Keep your list clean and focused.</p>
+    </div>
+    <div class="card">
+        <div class="card-icon">📱</div>
+        <h3>Works on Any Device</h3>
+        <p>Use TaskFlow on your phone, tablet, or computer. It adjusts to any screen size.</p>
+    </div>
+</section>
+
+<section class="tips">
+    <div class="tips-inner">
+        <h2>Tips for Better Daily Planning</h2>
+        <div class="tip">
+            <div class="tip-num">1</div>
+            <p><strong>Write tasks the night before.</strong> Starting your day with a ready list saves time and reduces morning stress.</p>
         </div>
-    </nav>
-
-    <!-- Hero -->
-    <section class="hero">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-
-        <div class="hero-tag">✦ Simple. Personal. Yours.</div>
-
-        <h1>Stay on top of<br>everything <em>that matters</em></h1>
-
-        <p>TaskFlow gives every user their own private workspace to add, track, and complete tasks — beautifully simple and always in sync.</p>
-
-        <div class="hero-cta">
-            <a href="/users/register" class="btn-primary">Create Free Account</a>
-            <a href="/users/login" class="btn-secondary">Sign In →</a>
+        <div class="tip">
+            <div class="tip-num">2</div>
+            <p><strong>Keep tasks small and specific.</strong> Instead of "work on project", write "write introduction paragraph for report".</p>
         </div>
-    </section>
-
-    <!-- Stats -->
-    <div class="stats">
-        <div class="stat">
-            <span class="stat-number">100%</span>
-            <span class="stat-label">Private per user</span>
+        <div class="tip">
+            <div class="tip-num">3</div>
+            <p><strong>Do the hardest task first.</strong> Tackling the most difficult item early leaves you energized for the rest of the day.</p>
         </div>
-        <div class="stat">
-            <span class="stat-number">Free</span>
-            <span class="stat-label">No credit card needed</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">∞</span>
-            <span class="stat-label">Tasks you can create</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number">Live</span>
-            <span class="stat-label">Saved to database instantly</span>
+        <div class="tip">
+            <div class="tip-num">4</div>
+            <p><strong>Review completed tasks.</strong> Seeing what you finished gives motivation to keep going the next day.</p>
         </div>
     </div>
+</section>
 
-    <!-- Features -->
-    <section class="features" id="features">
-        <div class="feature-card">
-            <div class="feature-icon">🔐</div>
-            <h3>Private Accounts</h3>
-            <p>Every user gets their own secure space. Your tasks are yours alone — no one else can see or touch them.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">✅</div>
-            <h3>Mark as Complete</h3>
-            <p>One click marks a task done. It stays that way even after you close the browser — saved permanently to the database.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3>Instant Updates</h3>
-            <p>Add or delete tasks and see changes immediately. No page lag, no confusion — just a clean list always up to date.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📱</div>
-            <h3>Works Everywhere</h3>
-            <p>Fully responsive on any screen — phone, tablet, or desktop. Manage your tasks from wherever you are.</p>
-        </div>
-    </section>
+<section class="cta">
+    <h2>Ready to get organized?</h2>
+    <p>It takes less than a minute to create an account.</p>
+    <a href="/users/register">Start for Free</a>
+</section>
 
-    <!-- CTA -->
-    <section class="cta-section">
-        <h2>Ready to get<br><em>organized?</em></h2>
-        <p>Join in seconds. No setup, no fuss — just tasks done right.</p>
-        <a href="/users/register" class="btn-primary">Start for Free</a>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>© 2026 TaskFlow. Built with Django.</p>
-        <div style="display:flex; gap:1.5rem;">
-            <a href="/users/login">Login</a>
-            <a href="/users/register">Register</a>
-        </div>
-    </footer>
+<footer>
+    © 2026 TaskFlow. Built with Django.felixflire. All rights reserved.
+</footer>
 
 </body>
 </html>
