@@ -1,4 +1,4 @@
-# tasksapp/ml_summary.py
+
 from datetime import date
 
 def analyze_patterns(all_tasks):

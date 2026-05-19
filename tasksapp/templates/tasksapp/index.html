@@ -14,7 +14,7 @@
         <tr>
             <td>{{ task.tasksfield }}</td>
             <td>{{ task.description }}</td>
-            <td> {{ task.completed}}</td>
+            
             
             
             <td  >{% if task.completed == 'completed'%}
@@ -22,7 +22,7 @@
                 {% else %}
                 <form action="{% url 'tasksapp:toggle_complete' task.id%} " method="post">
                     {% csrf_token %}
-                    <input type="submit" value="Mark Complete"/>
+                    <input style="background-color: green;" type="submit" value="Mark Complete"/>
 
                 </form>
                 {% endif %}
@@ -46,9 +46,9 @@
         <input type="submit" />
     </form>
 
-    <a href="{% url 'tasksapp:summary' %}">📊 View Daily Summary</a>
+    <button style="background-color: rgb(71, 70, 70); "><a style="color: white;" href="{% url 'tasksapp:summary' %}">📊 View Daily Summary</a></button>
 
-    <a href="{% url 'users:logout'%}">logout</a>
+    <button style="background-color: rgb(71, 70, 70); "><a style="color: white;"{% url 'users:logout'%}">logout</a></button>
     {% endblock%}
 
 

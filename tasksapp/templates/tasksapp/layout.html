@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1>{{ request.user.username }}'s Tasks</h1>
+    <h1>{{ request.user.username|upper }}'s Tasks</h1>
     {% block body %}
 
     
